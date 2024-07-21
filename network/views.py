@@ -8,6 +8,7 @@ from .models import User
 
 
 def index(request):
+    print("testing github actions")
     return render(request, "network/index.html")
 
 
