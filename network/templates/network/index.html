@@ -1,5 +1,21 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+<div id="create-post" class="hidden">
+    <form action="/" method="post">
+        {% csrf_token %}
+        <div><textarea name="body" id="" cols="45" rows="5" placeholder="Type the contents of your post here..."></textarea></div>
+        <div><button>submit</button></div>
+    </form>
+</div>
+
+<div>
+    {% for post in posts %}
+        <div>
+            <p>{{ post.user }}</p>
+            <p>{{ post.content }}</p>
+            <p>{{ post.timestamp }}</p>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

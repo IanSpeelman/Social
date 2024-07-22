@@ -4,12 +4,20 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
-    print("testing github actions")
-    return render(request, "network/index.html")
+    if request.method == "POST":
+        body = request.POST["body"]
+        newpost = Post(content=body, user=request.user)
+        newpost.save()
+    
+    posts = Post.objects.all()
+    print(posts)
+    return render(request, "network/index.html",{
+        "posts":posts,
+    })
 
 
 def login_view(request):
@@ -62,3 +70,5 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
