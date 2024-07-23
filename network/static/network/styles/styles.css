@@ -2,22 +2,17 @@
   display: none;
 }
 
+nav {
+  margin-bottom: 1em;
+}
+
 body {
   background-color: #dcdcdc;
   color: #222222;
 }
 
-#create-post .modal-show-button {
-  margin: 0.5em;
-  padding: 0.5em 1em;
-  background-color: #d45113;
-  color: black;
-}
-#create-post .modal-show-button:hover {
-  background-color: #ff7f44;
-}
 #create-post .post-create-modal {
-  background-color: #222222;
+  background-color: rgba(34, 34, 34, 0.8666666667);
   color: #dcdcdc;
   padding: 2em 4em;
   position: fixed;
@@ -25,6 +20,8 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   filter: drop-shadow(#222222 0px 0px 10px);
+  backdrop-filter: blur(10px);
+  border-radius: 1em;
 }
 #create-post .post-create-modal textarea {
   background-color: inherit;
@@ -42,6 +39,43 @@ body {
 }
 #create-post .post-create-modal button:hover {
   background-color: #ff7f44;
+}
+
+#post-list {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#post-list .modal-show-button {
+  background-color: #d45113;
+  color: black;
+  width: 50vw;
+  padding: 1em;
+  margin-bottom: 0.3em;
+}
+#post-list .modal-show-button:hover {
+  background-color: #ff7f44;
+}
+#post-list .post {
+  width: 50vw;
+  background-color: #222222;
+  color: #dcdcdc;
+  padding: 1em;
+  margin-bottom: 0.3em;
+}
+#post-list .post .post-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#post-list .post .post-bottom {
+  display: flex;
+  flex-direction: row;
+}
+#post-list .post .post-bottom svg {
+  width: 1em;
+  height: 1em;
 }
 
 /*# sourceMappingURL=styles.css.map */
