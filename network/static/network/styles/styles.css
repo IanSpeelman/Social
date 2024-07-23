@@ -1,0 +1,47 @@
+.hidden {
+  display: none;
+}
+
+body {
+  background-color: #dcdcdc;
+  color: #222222;
+}
+
+#create-post .modal-show-button {
+  margin: 0.5em;
+  padding: 0.5em 1em;
+  background-color: #d45113;
+  color: black;
+}
+#create-post .modal-show-button:hover {
+  background-color: #ff7f44;
+}
+#create-post .post-create-modal {
+  background-color: #222222;
+  color: #dcdcdc;
+  padding: 2em 4em;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(#222222 0px 0px 10px);
+}
+#create-post .post-create-modal textarea {
+  background-color: inherit;
+  color: inherit;
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border: 1px solid #9d9d9d;
+}
+#create-post .post-create-modal button {
+  width: 100%;
+  padding: 1em 2em;
+  background-color: #d45113;
+  color: black;
+  border: none;
+}
+#create-post .post-create-modal button:hover {
+  background-color: #ff7f44;
+}
+
+/*# sourceMappingURL=styles.css.map */
