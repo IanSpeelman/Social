@@ -1,14 +1,18 @@
 {% extends "network/layout.html" %}
-
+{% load static %}
 {% block body %}
 {% if user.is_authenticated %}
-<div id="create-post" class="hidden">
-    <form action="/" method="post">
-        {% csrf_token %}
-        <div><textarea name="body" id="" cols="45" rows="5"
-                placeholder="Type the contents of your post here..."></textarea></div>
-        <div><button>submit</button></div>
-    </form>
+<div id="create-post">
+    <button class="modal-show-button">Create new post!</button>
+    <div class="post-create-modal hidden">
+        <h3>Create new post</h3>
+        <form action="/" method="post">
+            {% csrf_token %}
+            <div><textarea name="body" id="" cols="60" rows="10"
+                    placeholder="Type the contents of your post here..."></textarea></div>
+            <div><button>submit</button></div>
+        </form>
+    </div>
 </div>
 {% endif %}
 <div>
@@ -20,4 +24,5 @@
     </div>
     {% endfor %}
 </div>
+<script src="{% static 'network/js/show_modal.js' %}"></script>
 {% endblock %}
