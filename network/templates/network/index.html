@@ -45,12 +45,14 @@
         </div>
     </div>
     {% endfor %}
+    <div class="pagination">
+        {% if previous %}
+        <a href="{% url 'index' %}?page={{previous}}">previous</a>
+        {% endif %}
+        {% if next %}
+        <a href="{% url 'index' %}?page={{next}}">next</a>
+        {% endif %}
+    </div>
 </div>
 <script src="{% static 'network/js/show_modal.js' %}"></script>
-{% if next %}
-<a href="{% url 'index' %}?page={{next}}">next</a>
-{% endif %}
-{% if previous %}
-<a href="{% url 'index' %}?page={{previous}}">previous</a>
-{% endif %}
 {% endblock %}

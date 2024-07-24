@@ -90,4 +90,20 @@ body {
 			}
 		}
 	}
+
+	.pagination {
+		a {
+			width: 100%;
+			color: inherit;
+			padding: 1em;
+			background-color: $accent-color;
+			text-align: center;
+		}
+		gap: 1em;
+		width: 50vw;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		color: $accent-contrast;
+	}
 }
