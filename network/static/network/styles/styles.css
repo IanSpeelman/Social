@@ -77,5 +77,20 @@ body {
   width: 1em;
   height: 1em;
 }
+#post-list .pagination {
+  gap: 1em;
+  width: 50vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  color: black;
+}
+#post-list .pagination a {
+  width: 100%;
+  color: inherit;
+  padding: 1em;
+  background-color: #d45113;
+  text-align: center;
+}
 
 /*# sourceMappingURL=styles.css.map */
