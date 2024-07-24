@@ -1,27 +1,52 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Post
-
+import time
 
 def index(request):
-    posts = Post.objects.all()
+    result = Post.objects.all().order_by("-timestamp")
+    p = Paginator(result, 10)
+    
+    try:
+        page = int(request.GET.get("page", 1))
+        if page == "" or page < 1:
+            page = 1
+        elif page > p.num_pages:
+            page = p.num_pages
+    except:
+        page = 1
+    posts = p.page(page).object_list
+    next = False 
+    previous = False
+    if page > 1:
+        previous = page - 1
+    if page < p.num_pages:
+        next = page + 1
+
+
     if request.method == "POST":
         body = request.POST.get("body", "")
         if body == "":
-            return render(request, "network/index.html",{"posts":posts}, status=406)
+            return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous}, status=406)
         if not request.user.is_authenticated:
-            return render(request, "network/index.html",{"posts":posts}, status=406)
-
+            return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous}, status=406)
         newpost = Post(content=body, user=request.user)
         newpost.save()
+        return HttpResponseRedirect(reverse(index))
+
+    
+    
     
     return render(request, "network/index.html",{
-        "posts":posts,
-    })
+        "posts":posts, 
+        "next": next, 
+        "previous": previous
+        })
 
 
 def login_view(request):

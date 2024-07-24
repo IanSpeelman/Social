@@ -17,8 +17,23 @@ class test_models(TestCase):
         self.register_url = reverse("register")
         self.logout_url = reverse("logout")
 
-    def test_index_GET(self):
+    def test_index_GET_no_page(self):
         response = self.client.get(self.index_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("/network/index.html")
+
+    def test_index_GET_page_to_high(self):
+        response = self.client.get(f"{self.index_url}/?page=12")
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("/network/index.html")
+
+    def test_index_GET_page_to_low(self):
+        response = self.client.get(f"{self.index_url}?page=-12")
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("/network/index.html")
+
+    def test_index_GET_page_no_integer(self):
+        response = self.client.get(f"{self.index_url}?page=sdf")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed("/network/index.html")
 
@@ -43,7 +58,7 @@ class test_models(TestCase):
         })
         latest = Post.objects.all().latest("id")
         self.assertEqual(latest.content, body)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed("/network/index.html")
 
     def test_login_POST(self):
