@@ -1,6 +1,7 @@
 {% extends "network/layout.html" %}
 {% load static %}
 {% block body %}
+<h1>{{ title }}</h1>
 {% if user.is_authenticated %}
 <div id="create-post">
     <div class="post-create-modal hidden">
