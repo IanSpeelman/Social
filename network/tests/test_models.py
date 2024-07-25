@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 
-from network.models import User, Post, Follow
+from network.models import User, Post, Follow, Likes
 
 class test_models(TestCase):
     def setUp(self):
@@ -22,4 +22,13 @@ class test_models(TestCase):
 
         self.assertEqual(follow.follower, self.user)
         self.assertEqual(follow.followed, self.user2)
+
+    def test_liking_post(self):
+        Post.objects.create(user=self.user, content="this is a post")
+        last_post = Post.objects.all().latest("id")
+        Likes.objects.create(user=self.user, post=last_post)
+        likes = Likes.objects.all().latest("id")
+
+        self.assertEqual(likes.user, self.user)
+        self.assertEqual(likes.post, last_post)
 
