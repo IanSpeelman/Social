@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.test import TestCase, Client
 from django.db import IntegrityError, transaction
 
-from network.models import User, Post, Follow
+from network.models import User, Post, Follow, Likes
 
 class test_models(TestCase):
     def setUp(self):
@@ -181,3 +181,34 @@ class test_models(TestCase):
         response = self.client.get(reverse("followed"))
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed("/network/login.html")
+
+    def test_likes_GET(self):
+        newpost = Post(user=self.user, content="this is a test post")
+        newpost.save()
+        self.assertEqual(Likes.objects.all().count(), 0)
+        response = self.client.get(reverse("like", kwargs={"post_id": 1}))
+        self.assertEqual(Likes.objects.all().count(), 1)
+        self.assertEqual(response.status_code, 200)
+
+    def test_likes_GET_post_does_not_exist(self):
+        response = self.client.get(reverse("like", kwargs={"post_id": 1}))
+        self.assertEqual(Likes.objects.all().count(), 0)
+        self.assertEqual(response.status_code, 404)
+        
+    def test_likes_GET_user_not_logged_in(self):
+        self.client.logout()
+        newpost = Post(user=self.user, content="this is a test post")
+        newpost.save()
+        response = self.client.get(reverse("like", kwargs={"post_id": 1}))
+        self.assertEqual(Likes.objects.all().count(), 0)
+        self.assertEqual(response.status_code, 401)
+
+    def test_likes_GET_unliking(self):
+        newpost = Post(user=self.user, content="this is a test post")
+        newpost.save()
+        self.assertEqual(Likes.objects.all().count(), 0)
+        response = self.client.get(reverse("like", kwargs={"post_id": 1}))
+        self.assertEqual(Likes.objects.all().count(), 1)
+        response = self.client.get(reverse("like", kwargs={"post_id": 1}))
+        self.assertEqual(Likes.objects.all().count(), 0)
+        self.assertEqual(response.status_code, 200)

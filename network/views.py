@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Likes
 import time
 
 def index(request):
@@ -161,3 +161,21 @@ def followed(request):
             "title": "Followed"
         })
     return HttpResponseRedirect(reverse("login"))
+
+def like(request, post_id):
+    if not request.user.is_authenticated:
+        return HttpResponse({}, status=401)
+    try:
+        post = Post.objects.filter(pk=post_id)
+        # print(post)
+        like = Likes.objects.filter(user=request.user, post=post[0])
+        new_like = Likes(user=request.user, post=post[0])
+        if like:
+            like.delete()
+        else:
+            new_like.save()
+
+        return HttpResponse({}, status=200)
+        
+    except:
+        return HttpResponse({}, status=404)
