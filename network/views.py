@@ -150,12 +150,14 @@ def follow(request, user_id):
 
 
 def followed(request):
-    follow_list = Follow.objects.filter(follower=request.user)
-    users = []
-    for user in follow_list:
-        users.append(user.followed)
-    posts = Post.objects.filter(user__in=users)
-    return render(request, 'network/index.html',{
-        "posts":posts,
-        "title": "Followed"
-    })
+    if request.user.is_authenticated:
+        follow_list = Follow.objects.filter(follower=request.user)
+        users = []
+        for user in follow_list:
+            users.append(user.followed)
+        posts = Post.objects.filter(user__in=users)
+        return render(request, 'network/index.html',{
+            "posts":posts,
+            "title": "Followed"
+        })
+    return HttpResponseRedirect(reverse("login"))

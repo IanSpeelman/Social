@@ -172,11 +172,12 @@ class test_models(TestCase):
         self.assertEqual(Follow.objects.all().count(), 0)
 
     def test_following_page_GET(self):
-        response = self.client.get(reverse("following"))
+        response = self.client.get(reverse("followed"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed("/network/index.html")
 
     def test_following_page_GET_not_logged_in(self):
-        response = self.client.get(reverse("following"))
+        self.client.logout()
+        response = self.client.get(reverse("followed"))
         self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed("/network/index.html")
+        self.assertTemplateUsed("/network/login.html")
