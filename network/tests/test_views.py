@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.test import TestCase, Client
 from django.db import IntegrityError, transaction
 
-from network.models import User, Post
+from network.models import User, Post, Follow
 
 class test_models(TestCase):
     def setUp(self):
@@ -16,6 +16,7 @@ class test_models(TestCase):
         self.login_url = reverse("login")
         self.register_url = reverse("register")
         self.logout_url = reverse("logout")
+        self.follow_url = reverse("followed")
 
     def test_index_GET_no_page(self):
         response = self.client.get(self.index_url)
@@ -140,3 +141,32 @@ class test_models(TestCase):
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(response.status_code, 406)
         self.assertTemplateUsed("/network/register.html")
+
+    def test_profile_POST(self):
+        response = self.client.post(reverse("profile", kwargs={"user_id": 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("/network/profile.html")
+
+    def test_profile_POST_non_existing_user_id(self):
+        response = self.client.post(reverse("profile", kwargs={"user_id": 999}))
+        self.assertEqual(response.status_code, 302)
+
+    def test_following_profile_GET(self):
+        user2  = User.objects.create_user(username="testuser2", password="password", email="testemail@gmail.com")
+        response = self.client.get(reverse("follow", kwargs={"user_id":2}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Follow.objects.all().count(), 1)
+        response = self.client.get(reverse("follow", kwargs={"user_id":2}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Follow.objects.all().count(), 0)
+
+    def test_following_profile_GET_not_logged_in(self):
+        self.client.logout()
+        user2  = User.objects.create_user(username="testuser2", password="password", email="testemail@gmail.com")
+        response = self.client.get(reverse("follow", kwargs={"user_id":2}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Follow.objects.all().count(), 0)
+        response = self.client.get(reverse("follow", kwargs={"user_id":2}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Follow.objects.all().count(), 0)
+
