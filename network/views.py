@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Post
+from .models import User, Post, Follow
 import time
 
 def index(request):
@@ -111,3 +111,42 @@ def register(request):
         return render(request, "network/register.html")
 
 
+def profile(request, user_id):
+    
+    try:
+        profile = User.objects.filter(id=user_id)[0]
+        posts = Post.objects.filter(user=profile).order_by("-timestamp")
+        followed = Follow.objects.filter(follower=request.user.id, followed=user_id)
+        if(len(followed) == 1):
+            followed = True
+        else:
+            followed = False
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    
+    return render(request, "network/profile.html",{
+        "profile": profile,
+        "posts": posts,
+        "followed":followed,
+        "followednum": Follow.objects.filter(followed=profile).count(),
+        "followernum": Follow.objects.filter(follower=profile).count(),
+    })
+
+def follow(request, user_id): 
+    if (request.user.is_authenticated ):
+            follower = User.objects.filter(id=request.user.id)[0]
+            followed = User.objects.filter(id=user_id)[0]
+            check = Follow.objects.filter(follower=follower, followed=followed)
+            if(len(check) < 1):
+                new_follow = Follow.objects.create(follower=follower, followed=followed)
+                new_follow.save()
+            else:
+                check[0].delete()
+            return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
+    else:
+        return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
+        
+
+
+def followed(request):
+    return HttpResponseRedirect(reverse("index"))

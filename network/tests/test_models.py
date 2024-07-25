@@ -1,11 +1,12 @@
 from django.test import TestCase, Client
 
-from network.models import User, Post
+from network.models import User, Post, Follow
 
 class test_models(TestCase):
     def setUp(self):
         client = Client()
         self.user = User.objects.create_user(username="testuser", password="password", email="testemail@gmail.com")
+        self.user2 = User.objects.create_user(username="testuser2", password="password", email="testemail@gmail.com")
         client.login(username="testuser", password="password")
         pass
     
@@ -14,3 +15,11 @@ class test_models(TestCase):
         post = Post.objects.all().latest("id")
         self.assertEqual(post.content, "this is a post")
         pass
+
+    def test_following_user(self):
+        Follow.objects.create(followed=self.user2, follower=self.user)
+        follow = Follow.objects.all().latest("id")
+
+        self.assertEqual(follow.follower, self.user)
+        self.assertEqual(follow.followed, self.user2)
+

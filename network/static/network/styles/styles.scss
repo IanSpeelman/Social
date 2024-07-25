@@ -6,6 +6,7 @@ $accent-color: #d45113;
 $accent-hover: #ff7f44;
 $accent-contrast: black;
 $modal-dark: #222222dd;
+$modal-light: #dcdcdcdd;
 
 .hidden {
 	display: none;
@@ -20,8 +21,8 @@ body {
 
 #create-post {
 	.post-create-modal {
-		background-color: $modal-dark;
-		color: $color-light;
+		background-color: $modal-light;
+		color: $color-dark;
 		padding: 2em 4em;
 		position: fixed;
 		top: 50%;
@@ -44,6 +45,7 @@ body {
 			background-color: $accent-color;
 			color: $accent-contrast;
 			border: none;
+			border-radius: 0.3em;
 		}
 		button:hover {
 			background-color: $accent-hover;
@@ -75,6 +77,10 @@ body {
 		padding: 1em;
 		margin-bottom: 0.3em;
 
+		a {
+			color: $color-light;
+			text-decoration: underline;
+		}
 		.post-top {
 			display: flex;
 			flex-direction: row;
@@ -105,5 +111,40 @@ body {
 		flex-direction: row;
 		justify-content: space-around;
 		color: $accent-contrast;
+	}
+}
+#user {
+	width: 90vw;
+	margin: 0 auto 1em auto;
+	padding: 2em;
+	background-color: $color-dark;
+	color: $color-light;
+	display: flex;
+	flex-direction: column;
+
+	.button {
+		width: 100%;
+		padding: 1em 2em;
+		background-color: $accent-color;
+		color: $accent-contrast;
+		border: none;
+		border-radius: 0.3em;
+		text-align: center;
+	}
+	.followed {
+		background-color: $color-light;
+		color: $color-dark;
+	}
+	#info {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		align-items: center;
+
+		div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
 	}
 }

@@ -12,8 +12,8 @@ body {
 }
 
 #create-post .post-create-modal {
-  background-color: rgba(34, 34, 34, 0.8666666667);
-  color: #dcdcdc;
+  background-color: rgba(220, 220, 220, 0.8666666667);
+  color: #222222;
   padding: 2em 4em;
   position: fixed;
   top: 50%;
@@ -36,6 +36,7 @@ body {
   background-color: #d45113;
   color: black;
   border: none;
+  border-radius: 0.3em;
 }
 #create-post .post-create-modal button:hover {
   background-color: #ff7f44;
@@ -64,6 +65,10 @@ body {
   padding: 1em;
   margin-bottom: 0.3em;
 }
+#post-list .post a {
+  color: #dcdcdc;
+  text-decoration: underline;
+}
 #post-list .post .post-top {
   display: flex;
   flex-direction: row;
@@ -91,6 +96,40 @@ body {
   padding: 1em;
   background-color: #d45113;
   text-align: center;
+}
+
+#user {
+  width: 90vw;
+  margin: 0 auto 1em auto;
+  padding: 2em;
+  background-color: #222222;
+  color: #dcdcdc;
+  display: flex;
+  flex-direction: column;
+}
+#user .button {
+  width: 100%;
+  padding: 1em 2em;
+  background-color: #d45113;
+  color: black;
+  border: none;
+  border-radius: 0.3em;
+  text-align: center;
+}
+#user .followed {
+  background-color: #dcdcdc;
+  color: #222222;
+}
+#user #info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+#user #info div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /*# sourceMappingURL=styles.css.map */
