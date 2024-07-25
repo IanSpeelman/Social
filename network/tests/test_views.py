@@ -159,6 +159,7 @@ class test_models(TestCase):
         response = self.client.get(reverse("follow", kwargs={"user_id":2}))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Follow.objects.all().count(), 0)
+        self.assertTemplateUsed("/network/profile.html")
 
     def test_following_profile_GET_not_logged_in(self):
         self.client.logout()
@@ -170,3 +171,12 @@ class test_models(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Follow.objects.all().count(), 0)
 
+    def test_following_page_GET(self):
+        response = self.client.get(reverse("following"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("/network/index.html")
+
+    def test_following_page_GET_not_logged_in(self):
+        response = self.client.get(reverse("following"))
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed("/network/index.html")

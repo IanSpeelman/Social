@@ -32,9 +32,9 @@ def index(request):
     if request.method == "POST":
         body = request.POST.get("body", "")
         if body == "":
-            return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous}, status=406)
+            return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous, "title": "Index"}, status=406)
         if not request.user.is_authenticated:
-            return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous}, status=406)
+            return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous, "title": "Index"}, status=406)
         newpost = Post(content=body, user=request.user)
         newpost.save()
         return HttpResponseRedirect(reverse(index))
@@ -45,7 +45,8 @@ def index(request):
     return render(request, "network/index.html",{
         "posts":posts, 
         "next": next, 
-        "previous": previous
+        "previous": previous,
+        "title": "Index",
         })
 
 
@@ -149,4 +150,12 @@ def follow(request, user_id):
 
 
 def followed(request):
-    return HttpResponseRedirect(reverse("index"))
+    follow_list = Follow.objects.filter(follower=request.user)
+    users = []
+    for user in follow_list:
+        users.append(user.followed)
+    posts = Post.objects.filter(user__in=users)
+    return render(request, 'network/index.html',{
+        "posts":posts,
+        "title": "Followed"
+    })
