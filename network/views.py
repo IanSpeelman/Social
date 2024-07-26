@@ -4,9 +4,9 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+import json
 
 from .models import User, Post, Follow, Likes
-import time
 
 def index(request):
     result = Post.objects.all().order_by("-timestamp")
@@ -167,7 +167,6 @@ def like(request, post_id):
         return HttpResponse({}, status=401)
     try:
         post = Post.objects.filter(pk=post_id)
-        # print(post)
         like = Likes.objects.filter(user=request.user, post=post[0])
         new_like = Likes(user=request.user, post=post[0])
         if like:
@@ -179,3 +178,16 @@ def like(request, post_id):
         
     except:
         return HttpResponse({}, status=404)
+    
+def postinfo(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        likes = Likes.objects.filter(post=post)
+        liked_by = False
+        for like in likes:
+            if like.user == request.user:
+                liked_by = True
+        return HttpResponse(json.dumps({"post": post_id, "likes":len(likes), "likedByUser": liked_by}), content_type="application/json", status=200)
+        
+    except:
+        return HttpResponse(json.dumps({"message": "post does not exist"}), content_type="application/json", status=404)
