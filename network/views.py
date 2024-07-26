@@ -113,11 +113,31 @@ def register(request):
 
 
 def profile(request, user_id):
-    
+       
     try:
         profile = User.objects.filter(id=user_id)[0]
-        posts = Post.objects.filter(user=profile).order_by("-timestamp")
+        postsresult = Post.objects.filter(user=profile).order_by("-timestamp")
         followed = Follow.objects.filter(follower=request.user.id, followed=user_id)
+        
+        
+        p = Paginator(postsresult, 10)
+    
+        try:
+            page = int(request.GET.get("page", 1))
+            if page == "" or page < 1:
+                page = 1
+            elif page > p.num_pages:
+                page = p.num_pages
+        except:
+            page = 1
+        posts = p.page(page).object_list
+        next = False 
+        previous = False
+        if page > 1:
+            previous = page - 1
+        if page < p.num_pages:
+            next = page + 1
+        
         if(len(followed) == 1):
             followed = True
         else:
@@ -131,6 +151,10 @@ def profile(request, user_id):
         "followed":followed,
         "followednum": Follow.objects.filter(followed=profile).count(),
         "followernum": Follow.objects.filter(follower=profile).count(),
+        "postcount": len(postsresult),
+        "next": next,
+        "previous":previous,
+        
     })
 
 def follow(request, user_id): 
@@ -155,10 +179,31 @@ def followed(request):
         users = []
         for user in follow_list:
             users.append(user.followed)
-        posts = Post.objects.filter(user__in=users)
+        postsresult = Post.objects.filter(user__in=users).order_by("-timestamp")
+
+        p = Paginator(postsresult, 10)
+    
+        try:
+            page = int(request.GET.get("page", 1))
+            if page == "" or page < 1:
+                page = 1
+            elif page > p.num_pages:
+                page = p.num_pages
+        except:
+            page = 1
+        posts = p.page(page).object_list
+        next = False 
+        previous = False
+        if page > 1:
+            previous = page - 1
+        if page < p.num_pages:
+            next = page + 1
+
         return render(request, 'network/index.html',{
             "posts":posts,
-            "title": "Followed"
+            "title": "Followed",
+            "next":next,
+            "previous":previous,
         })
     return HttpResponseRedirect(reverse("login"))
 
