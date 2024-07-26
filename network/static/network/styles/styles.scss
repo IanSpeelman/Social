@@ -89,10 +89,24 @@ body {
 		.post-bottom {
 			display: flex;
 			flex-direction: row;
+			padding: 0;
+			margin: 0;
+			line-height: 1em;
+			max-height: 1em;
 
-			svg {
+			img {
+				display: block;
 				width: 1em;
 				height: 1em;
+				line-height: 1em;
+			}
+			.hidden {
+				display: none;
+			}
+			.likes {
+				display: inline;
+				margin-left: 0.2em;
+				height: 100%;
 			}
 		}
 	}

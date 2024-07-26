@@ -77,10 +77,24 @@ body {
 #post-list .post .post-bottom {
   display: flex;
   flex-direction: row;
+  padding: 0;
+  margin: 0;
+  line-height: 1em;
+  max-height: 1em;
 }
-#post-list .post .post-bottom svg {
+#post-list .post .post-bottom img {
+  display: block;
   width: 1em;
   height: 1em;
+  line-height: 1em;
+}
+#post-list .post .post-bottom .hidden {
+  display: none;
+}
+#post-list .post .post-bottom .likes {
+  display: inline;
+  margin-left: 0.2em;
+  height: 100%;
 }
 #post-list .pagination {
   gap: 1em;

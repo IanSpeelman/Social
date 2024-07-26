@@ -212,3 +212,20 @@ class test_models(TestCase):
         response = self.client.get(reverse("like", kwargs={"post_id": 1}))
         self.assertEqual(Likes.objects.all().count(), 0)
         self.assertEqual(response.status_code, 200)
+
+    def test_GET_likes_info(self):
+        newpost = Post(user=self.user, content="this is a test post")
+        newpost.save()
+        response = self.client.get(reverse("postinfo", kwargs={"post_id": 1}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_GET_likes_info_post_does_not_exist(self):
+        response = self.client.get(reverse("postinfo", kwargs={"post_id": 1}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_GET_likes_info_not_logged_in(self):
+        self.client.logout()
+        newpost = Post(user=self.user, content="this is a test post")
+        newpost.save()
+        response = self.client.get(reverse("postinfo", kwargs={"post_id": 1}))
+        self.assertEqual(response.status_code, 401)
