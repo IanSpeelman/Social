@@ -181,16 +181,13 @@ def like(request, post_id):
     
 def postinfo(request, post_id):
     try:
-        if request.user.is_authenticated:
-            post = Post.objects.get(id=post_id)
-            likes = Likes.objects.filter(post=post)
-            liked_by = False
-            for like in likes:
-                if like.user == request.user:
-                    liked_by = True
-            return HttpResponse(json.dumps({"post": post_id, "likes":len(likes), "likedByUser": liked_by}), content_type="application/json", status=200)
-        return HttpResponse(json.dumps({"message": "you are not logged in"}), content_type="application/json", status=401)
-        
+        post = Post.objects.get(id=post_id)
+        likes = Likes.objects.filter(post=post)
+        liked_by = False
+        for like in likes:
+            if like.user == request.user:
+                liked_by = True
+        return HttpResponse(json.dumps({"post": post_id, "likes":len(likes), "likedByUser": liked_by}), content_type="application/json", status=200)
         
     except:
         return HttpResponse(json.dumps({"message": "post does not exist"}), content_type="application/json", status=404)

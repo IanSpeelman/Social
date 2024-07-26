@@ -228,4 +228,4 @@ class test_models(TestCase):
         newpost = Post(user=self.user, content="this is a test post")
         newpost.save()
         response = self.client.get(reverse("postinfo", kwargs={"post_id": 1}))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 200)

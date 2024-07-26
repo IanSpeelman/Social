@@ -15,7 +15,11 @@
     </div>
 </div>
 {% endif %}
-<div id="post-list">
+{% if user.is_authenticated %}
+<div id="post-list" data-login="true">
+{% else %}
+<div id="post-list" data-login="false">
+{% endif%}
     {% if user.is_authenticated %}
     <button class="modal-show-button">Create new post!</button>
     {% endif %}
