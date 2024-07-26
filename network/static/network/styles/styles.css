@@ -88,6 +88,10 @@ body {
   height: 1em;
   line-height: 1em;
 }
+#post-list .post .post-bottom img:hover {
+  width: 1.1em;
+  height: 1.1em;
+}
 #post-list .post .post-bottom .hidden {
   display: none;
 }
