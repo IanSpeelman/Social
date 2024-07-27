@@ -29,6 +29,7 @@
 </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 {% if user.is_authenticated %}
 <div id="post-list" data-login="true">
     {% else %}
@@ -73,6 +74,8 @@
     <script src="{% static 'network/js/post_liking.js' %}"></script>
     <script src="{% static 'network/js/edit_post.js' %}"></script>
 =======
+=======
+>>>>>>> main
     {% if user.is_authenticated %}
     <div id="post-list" data-login="true">
     {% else %}
@@ -95,6 +98,21 @@
             <p class="likes">0</p>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    {% endfor %}
+    <div class="pagination">
+        {% if previous %}
+        <a href="{% url 'profile' profile.id %}?page={{previous}}">previous</a>
+        {% endif %}
+        {% if next %}
+        <a href="{% url 'profile' profile.id %}?page={{next}}">next</a>
+        {% endif %}
+    </div>
+</div>
+<script src="{% static 'network/js/post_liking.js' %}"></script>
+>>>>>>> main
 
     {% endfor %}
     <div class="pagination">
