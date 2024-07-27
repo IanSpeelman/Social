@@ -229,3 +229,60 @@ class test_models(TestCase):
         newpost.save()
         response = self.client.get(reverse("postinfo", kwargs={"post_id": 1}))
         self.assertEqual(response.status_code, 200)
+
+    def test_edit_post_POST(self):
+        user = User.objects.get(id=1)
+        Post.objects.create(content="this post has this as the content", user=self.user)
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.content, "this post has this as the content")
+        response = self.client.post(reverse("edit", kwargs={"post_id":1}), {
+            "title":"Index",
+            "content": "the content has changed",
+        })
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.content, "the content has changed")
+        self.assertEqual(response.status_code, 302)
+
+    def test_edit_post_POST_not_logged_in(self):
+        self.client.logout()
+        Post.objects.create(content="this post has this as the content", user=self.user)
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.content, "this post has this as the content")
+        response = self.client.post(reverse("edit", kwargs={"post_id":1}), {
+            "title":"Index",
+            "content": "the content has changed",
+        })
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.content, "this post has this as the content")
+        self.assertEqual(response.status_code, 403)
+
+    def test_edit_post_POST_post_non_existent(self):
+        response = self.client.post(reverse("edit", kwargs={"post_id":999}), {
+            "title":"Index",
+            "content": "the content has changed",
+        })
+        self.assertEqual(response.status_code, 404)
+
+    def test_edit_post_GET_wrong_method(self):
+        response = self.client.get(reverse("edit", kwargs={"post_id":1}), {
+            "title":"Index",
+            "content": "the content has changed",
+        })
+        self.assertEqual(response.status_code, 405)
+
+    def test_edit_post_of_other_user_POST(self):
+        Post.objects.create(content="this post has this as the content", user=self.user)
+        self.client.logout()
+        self.user = User.objects.create_user(username="testuser2", password="password", email="testemail@gmail.com")
+        self.client.login(username="testuser2", password="password")
+
+        response = self.client.post(reverse("edit", kwargs={"post_id":1}), {
+            "title":"Index",
+            "content": "the content has changed",
+        })
+        post = Post.objects.get(id=1)
+        self.assertEqual(post.content, "this post has this as the content")
+        self.assertEqual(response.status_code, 403)
+
+
+

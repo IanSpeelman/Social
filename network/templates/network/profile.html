@@ -27,6 +27,49 @@
         </div>
     </div>
 </div>
+{% if user.is_authenticated %}
+<div id="post-list" data-login="true">
+    {% else %}
+    <div id="post-list" data-login="false">
+        {% endif%}
+        {% for post in posts %}
+        <div class="post" data-post="{{ post.id }}">
+            <div class="post-top">
+                <p class="post-user"><a href="{% url 'profile' post.user.id%}">{{ post.user }}</a></p>
+                <p class="post-timestamp">{{ post.timestamp }}</p>
+            </div>
+            <div class="post-body">
+                <form action="/post/{{ post.id }}/edit" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ title }}" name="title">
+                    <p data-post="{{ post.id }}">{{ post.content }}</p>
+                </form>
+            </div>
+            <div class="post-bottom">
+                <div class="like" data-post="{{ post.id }}">
+                    <img class="" src="{% static 'network/images/not_liked.png' %}" alt="">
+                    <img class="hidden" src="{% static 'network/images/liked.png' %}" alt="">
+                </div>
+                <p class="likes">0</p>
+                {% if user == post.user%}
+                <div class="edit" data-post="{{ post.id }}">
+                    <img class="" src="{% static 'network/images/edit.png' %}" alt="">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="pagination">
+            {% if previous %}
+            <a href="{% url 'profile' profile.id %}?page={{previous}}">previous</a>
+            {% endif %}
+            {% if next %}
+            <a href="{% url 'profile' profile.id %}?page={{next}}">next</a>
+            {% endif %}
+        </div>
+    </div>
+    <script src="{% static 'network/js/post_liking.js' %}"></script>
+    <script src="{% static 'network/js/edit_post.js' %}"></script>
 
     {% if user.is_authenticated %}
     <div id="post-list" data-login="true">
@@ -63,4 +106,4 @@
 </div>
 <script src="{% static 'network/js/post_liking.js' %}"></script>
 
-{% endblock %}
+    {% endblock %}

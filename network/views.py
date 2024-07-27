@@ -113,7 +113,7 @@ def register(request):
 
 
 def profile(request, user_id):
-       
+          
     try:
         profile = User.objects.filter(id=user_id)[0]
         postsresult = Post.objects.filter(user=profile).order_by("-timestamp")
@@ -154,6 +154,7 @@ def profile(request, user_id):
         "postcount": len(postsresult),
         "next": next,
         "previous":previous,
+        "title": "Profile"
         
     })
 
@@ -236,3 +237,31 @@ def postinfo(request, post_id):
         
     except:
         return HttpResponse(json.dumps({"message": "post does not exist"}), content_type="application/json", status=404)
+
+def edit(request, post_id):
+    if request.method == "POST":
+        content = request.POST.get("content", "")
+        user = request.user
+        title = request.POST.get("title", "index")
+        try:
+            post = Post.objects.get(id=post_id)
+            if post.user == request.user:
+                try:
+                    post.content = content
+                    post.save()
+                except:
+                    return HttpResponseRedirect(reverse("index"), status=500)
+                    
+            else:
+                return HttpResponseRedirect(reverse("index"), status=403)
+        except:
+                return HttpResponseRedirect(reverse("index"), status=404)
+
+
+        #redirect user to the page they came from
+        if title == "Profile":
+            return HttpResponseRedirect(reverse(title.lower(), kwargs={"user_id":user.id}))
+        else:
+            return HttpResponseRedirect(reverse("index"))
+
+    return HttpResponseRedirect(reverse("index"), status=405)
