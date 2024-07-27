@@ -6,10 +6,6 @@ from django.shortcuts import render
 from django.urls import reverse
 import json
 
-#! remove After testing
-from django.views.decorators.csrf import csrf_exempt
-
-
 from .models import User, Post, Follow, Likes
 
 def index(request):
@@ -117,11 +113,7 @@ def register(request):
 
 
 def profile(request, user_id):
-<<<<<<< HEAD
           
-=======
-       
->>>>>>> main
     try:
         profile = User.objects.filter(id=user_id)[0]
         postsresult = Post.objects.filter(user=profile).order_by("-timestamp")
@@ -162,10 +154,7 @@ def profile(request, user_id):
         "postcount": len(postsresult),
         "next": next,
         "previous":previous,
-<<<<<<< HEAD
         "title": "Profile"
-=======
->>>>>>> main
         
     })
 
@@ -249,7 +238,6 @@ def postinfo(request, post_id):
     except:
         return HttpResponse(json.dumps({"message": "post does not exist"}), content_type="application/json", status=404)
 
-@csrf_exempt
 def edit(request, post_id):
     if request.method == "POST":
         content = request.POST.get("content", "")
