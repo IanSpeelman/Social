@@ -35,7 +35,7 @@ def index(request):
             return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous, "title": "Index"}, status=406)
         if not request.user.is_authenticated:
             return render(request, "network/index.html",{"posts":posts, "next": next, "previous": previous, "title": "Index"}, status=406)
-        newpost = Post(content=body, user=request.user)
+        newpost = Post(content=str(body), user=request.user)
         newpost.save()
         return HttpResponseRedirect(reverse(index))
 

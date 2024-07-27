@@ -8,7 +8,7 @@ class User(AbstractUser):
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=9999)
-    timestamp = models.DateTimeField(default=timezone.now())
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class Follow(models.Model):
     followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed")
