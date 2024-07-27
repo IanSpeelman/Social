@@ -74,6 +74,14 @@ body {
   flex-direction: row;
   justify-content: space-between;
 }
+#post-list .post .post-body textarea {
+  width: 100%;
+  display: block;
+  height: 10em;
+  background-color: rgba(255, 255, 255, 0.1882352941);
+  border: 1px solid #9d9d9d;
+  color: #dcdcdc;
+}
 #post-list .post .post-bottom {
   display: flex;
   flex-direction: row;
@@ -87,10 +95,12 @@ body {
   width: 1em;
   height: 1em;
   line-height: 1em;
+  margin-right: 0.1em;
 }
 #post-list .post .post-bottom img:hover {
   width: 1.1em;
   height: 1.1em;
+  margin-right: 0;
 }
 #post-list .post .post-bottom .hidden {
   display: none;
@@ -100,12 +110,16 @@ body {
   margin-left: 0.2em;
   height: 100%;
 }
+#post-list .post .post-bottom .edit {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+}
 #post-list .pagination {
   gap: 1em;
   width: 50vw;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   color: black;
 }
 #post-list .pagination a {

@@ -6,6 +6,10 @@ from django.shortcuts import render
 from django.urls import reverse
 import json
 
+#! remove After testing
+from django.views.decorators.csrf import csrf_exempt
+
+
 from .models import User, Post, Follow, Likes
 
 def index(request):
@@ -113,11 +117,31 @@ def register(request):
 
 
 def profile(request, user_id):
-    
+       
     try:
         profile = User.objects.filter(id=user_id)[0]
-        posts = Post.objects.filter(user=profile).order_by("-timestamp")
+        postsresult = Post.objects.filter(user=profile).order_by("-timestamp")
         followed = Follow.objects.filter(follower=request.user.id, followed=user_id)
+        
+        
+        p = Paginator(postsresult, 10)
+    
+        try:
+            page = int(request.GET.get("page", 1))
+            if page == "" or page < 1:
+                page = 1
+            elif page > p.num_pages:
+                page = p.num_pages
+        except:
+            page = 1
+        posts = p.page(page).object_list
+        next = False 
+        previous = False
+        if page > 1:
+            previous = page - 1
+        if page < p.num_pages:
+            next = page + 1
+        
         if(len(followed) == 1):
             followed = True
         else:
@@ -131,6 +155,11 @@ def profile(request, user_id):
         "followed":followed,
         "followednum": Follow.objects.filter(followed=profile).count(),
         "followernum": Follow.objects.filter(follower=profile).count(),
+        "postcount": len(postsresult),
+        "next": next,
+        "previous":previous,
+        "title": "Profile"
+        
     })
 
 def follow(request, user_id): 
@@ -155,10 +184,31 @@ def followed(request):
         users = []
         for user in follow_list:
             users.append(user.followed)
-        posts = Post.objects.filter(user__in=users)
+        postsresult = Post.objects.filter(user__in=users).order_by("-timestamp")
+
+        p = Paginator(postsresult, 10)
+    
+        try:
+            page = int(request.GET.get("page", 1))
+            if page == "" or page < 1:
+                page = 1
+            elif page > p.num_pages:
+                page = p.num_pages
+        except:
+            page = 1
+        posts = p.page(page).object_list
+        next = False 
+        previous = False
+        if page > 1:
+            previous = page - 1
+        if page < p.num_pages:
+            next = page + 1
+
         return render(request, 'network/index.html',{
             "posts":posts,
-            "title": "Followed"
+            "title": "Followed",
+            "next":next,
+            "previous":previous,
         })
     return HttpResponseRedirect(reverse("login"))
 
@@ -191,3 +241,32 @@ def postinfo(request, post_id):
         
     except:
         return HttpResponse(json.dumps({"message": "post does not exist"}), content_type="application/json", status=404)
+
+@csrf_exempt
+def edit(request, post_id):
+    if request.method == "POST":
+        content = request.POST.get("content", "")
+        user = request.user
+        title = request.POST.get("title", "index")
+        try:
+            post = Post.objects.get(id=post_id)
+            if post.user == request.user:
+                try:
+                    post.content = content
+                    post.save()
+                except:
+                    return HttpResponseRedirect(reverse("index"), status=500)
+                    
+            else:
+                return HttpResponseRedirect(reverse("index"), status=403)
+        except:
+                return HttpResponseRedirect(reverse("index"), status=404)
+
+
+        #redirect user to the page they came from
+        if title == "Profile":
+            return HttpResponseRedirect(reverse(title.lower(), kwargs={"user_id":user.id}))
+        else:
+            return HttpResponseRedirect(reverse("index"))
+
+    return HttpResponseRedirect(reverse("index"), status=405)
